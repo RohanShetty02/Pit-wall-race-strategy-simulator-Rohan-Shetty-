@@ -1,4 +1,5 @@
 rng(1);
+nRaces = 5000;
 pitLoss   = 20;     % normal stop (s)
 pitLossSC = 8;      % stop under a safety car (s)
 pitLaps   = 1:49;
@@ -13,7 +14,7 @@ for j = 1:numel(pitLaps)
     base(j) = raceTime(pitLaps(j), [2 3]) - pitLoss;   % medium then hard, no stop cost
 end
 
-nRaces = 5000;
+
 total  = zeros(nRaces, numel(pitLaps));
 for r = 1:nRaces
     if rand < 0.5                 % 50% chance of a safety car this race
@@ -42,9 +43,29 @@ fprintf('Fixed plan: %.2f s\n', mean(fixedTotal));
 fprintf('Reactive:   %.2f s\n', mean(reactTotal));
 fprintf('Gain from reacting: %.2f s per race\n', mean(fixedTotal) - mean(reactTotal));
 
+gain = fixedTotal - reactTotal;          % seconds saved in each race
+applied = gain > 0.001;                  % races where reacting changed something
+
+figure;
+histogram(gain(applied), 'BinWidth', 0.5);
+grid on;
+xlabel('Race time saved by reacting (s)');
+ylabel('Number of races');
+title('Race time saved by reacting to a safety car (races where it applied)');
+text(0.03, 0.95, sprintf('%.0f%% of races: no gain\n%.0f%% of races: mean gain %.1f s', ...
+    100*(1-mean(applied)), 100*mean(applied), mean(gain(applied))), ...
+    'Units', 'normalized', 'HorizontalAlignment', 'left', 'VerticalAlignment', 'top');
+exportgraphics(gcf, 'safety_car_gain.png', 'Resolution', 300);
+
 avg = mean(total);
 [bestAvg, idx] = min(avg);
 fprintf('Best fixed pit lap on average: %d (%.1f s)\n', pitLaps(idx), bestAvg);
 
 [~, hind] = min(total, [], 2);     % the best pit lap in hindsight, per race
 figure; histogram(pitLaps(hind)); xlabel('Best pit lap in hindsight'); ylabel('Races');
+
+figure; histogram(pitLaps(hind), 'BinWidth', 1);
+grid on;
+xlabel('Best pit lap in hindsight'); ylabel('Number of races');
+title('Best pit lap once the safety car is known, 5,000 races');
+exportgraphics(gcf, 'best_pit_lap_hindsight.png', 'Resolution', 300);
