@@ -15,7 +15,7 @@ A MATLAB model that asks the question a race engineer asks on the pit wall: **wh
 
 ## Main results (model with assumed tyre values, not team data)
 
-- One stop wins over no stop or two stops at a 20 s pit loss. A second stop only pays if a stop costs less than about 8.9 s.
+- One stop wins over no stop or two stops at a 20 s pit loss. A second stop only pays if a stop costs less than about 3 to 12 s (8.4 s on average) s.
 - The choice of tyre pair moves race time by 3 to 6 s more than the order does. The harder tyre first is faster by 0.1 to 0.2 s.
 - Reacting to a safety car saves about 1.1 to 1.3 s on average. It only applies in about 1 race in 6, and in those races it saves roughly 7 s or more.
 
