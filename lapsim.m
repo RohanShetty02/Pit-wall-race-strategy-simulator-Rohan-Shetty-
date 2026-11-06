@@ -1,4 +1,4 @@
-function lapTime = lapsim(mu, aAcc)
+function [lapTime, s, v, vF, vB] = lapsim(mu, aAcc)
     if nargin < 2, aAcc = 8; end
 
 %% 1. Track and car settings (already done for you)
